@@ -41,41 +41,41 @@ static char	*ft_strdup(const char *s1)
 	return (s2);
 }
 
-static char	*get_line(char **str)
+static char	*get_line(int fd, char **threads)
 {
 	size_t	offset;
 	char	*line;
 	char	*temp;
 
 	offset = 0;
-	while ((*str)[offset] != '\n' && (*str)[offset] != '\0')
+	while (threads[fd][offset] != '\n' && threads[fd][offset] != '\0')
 		offset++;
-	if ((*str)[offset] == '\n')
+	if (threads[fd][offset] == '\n')
 	{
-		line = ft_strsub(*str, 0, offset + 1);
-		temp = ft_strdup(*str + offset + 1);
-		ft_strdel(str);
+		line = ft_strsub(threads[fd], 0, offset + 1);
+		temp = ft_strdup(threads[fd] + offset + 1);
+		ft_strdel(&threads[fd]);
 		if (temp[0] != '\0')
-			*str = temp;
+			threads[fd] = temp;
 		else
 			ft_strdel(&temp);
 	}
 	else
 	{
-		line = ft_strdup(*str);
-		ft_strdel(str);
+		line = ft_strdup(threads[fd]);
+		ft_strdel(&threads[fd]);
 	}
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*line;
+	static char	*threads[1024];
 	char		*buff;
 	char		*temp;
 	int			bytes;
 
-	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	buff = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff)
@@ -84,17 +84,17 @@ char	*get_next_line(int fd)
 	while (bytes > 0)
 	{
 		buff[bytes] = '\0';
-		if (!line)
-			line = ft_strnew(0);
-		temp = ft_strjoin(line, buff);
-		ft_strdel(&line);
-		line = temp;
+		if (!threads[fd])
+			threads[fd] = ft_strnew(0);
+		temp = ft_strjoin(threads[fd], buff);
+		ft_strdel(&threads[fd]);
+		threads[fd] = temp;
 		if (ft_strchr(buff, '\n'))
 			break ;
 		bytes = read(fd, buff, BUFFER_SIZE);
 	}
 	ft_strdel(&buff);
-	if (bytes < 0 || (bytes == 0 && !line))
+	if (bytes < 0 || (bytes == 0 && !threads[fd]))
 		return (NULL);
-	return (get_line(&line));
+	return (get_line(fd, threads));
 }
