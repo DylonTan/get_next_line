@@ -1,5 +1,4 @@
-#include "get_next_line_bonus.h"
-#include <stdio.h>
+#include "get_next_line.h"
 
 static char	*ft_strsub(const char *str, size_t start, size_t len)
 {
