@@ -68,6 +68,15 @@ static char	*get_line(char **str)
 	return (line);
 }
 
+int	read_line(int fd, char **buff, int *bytes)
+{
+	int	b;
+
+	b = read(fd, *buff, BUFFER_SIZE);
+	*bytes = b;
+	return (b);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*line;
@@ -80,8 +89,7 @@ char	*get_next_line(int fd)
 	buff = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff)
 		return (NULL);
-	bytes = read(fd, buff, BUFFER_SIZE);
-	while (bytes > 0)
+	while (read_line(fd, &buff, &bytes) > 0)
 	{
 		buff[bytes] = '\0';
 		if (!line)
@@ -91,7 +99,6 @@ char	*get_next_line(int fd)
 		line = temp;
 		if (ft_strchr(buff, '\n'))
 			break ;
-		bytes = read(fd, buff, BUFFER_SIZE);
 	}
 	ft_strdel(&buff);
 	if (bytes < 0 || (bytes == 0 && !line))
