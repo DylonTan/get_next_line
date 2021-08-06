@@ -71,7 +71,7 @@ static char	*get_line(int fd, char **threads)
 char	*get_next_line(int fd)
 {
 	static char	*threads[1024];
-	static char		buff[BUFFER_SIZE + 1];
+	static char	buff[BUFFER_SIZE + 1];
 	char		*temp;
 	int			bytes;
 
@@ -87,7 +87,7 @@ char	*get_next_line(int fd)
 		ft_strdel(&threads[fd]);
 		threads[fd] = temp;
 		if (ft_strchr(buff, '\n'))
-			break;
+			break ;
 		bytes = read(fd, buff, BUFFER_SIZE);
 	}
 	if (bytes < 0 || (bytes == 0 && !threads[fd]))
