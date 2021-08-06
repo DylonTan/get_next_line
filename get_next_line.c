@@ -67,7 +67,7 @@ static char	*get_line(char **str)
 	return (line);
 }
 
-int	read_line(int fd, char **buff, int *bytes)
+static int	read_line(int fd, char **buff, int *bytes)
 {
 	int	b;
 

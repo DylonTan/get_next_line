@@ -67,7 +67,7 @@ static char	*get_line(int fd, char **threads)
 	return (line);
 }
 
-int	read_line(int fd, char **buff, int *bytes)
+static int	read_line(int fd, char **buff, int *bytes)
 {
 	int	b;
 
